@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System;
@@ -56,36 +56,35 @@ public class MoveObjectRoutine : MonoBehaviour
         }
     }
 
-    protected IEnumerator PunchHandRoutine(Action<bool> punchingHand, Transform handTransform, SphereCollider sCollider, float punchArmExtendedTime, float punchingRate)
+    protected IEnumerator PunchHandRoutine(Action<bool> punchingHand, Transform handTransform, Vector3 endPos, Vector3 returnPos, SphereCollider sCollider, float punchArmExtendedTime, float punchingRate)
     {
         bool boolToAssign = true;
         punchingHand(boolToAssign);
-        //punchingHand = true;
         handTransform.gameObject.SetActive(true);
 
         float currentTime = 0.0f;
         float normalizedDelta;
-        Vector3 startPosLeftHand = handTransform.localPosition;
-        Vector3 endPosLeftHand = new Vector3(-0.37f, -1.54f, 1.5f);
+        Vector3 startPosHand = handTransform.localPosition;
+        Vector3 endPosLeftHand = endPos;
         sCollider.enabled = true;
-        while (currentTime < 0.2f)
+        while (currentTime < 0.12f)
         {
             currentTime += Time.deltaTime;
             normalizedDelta = currentTime / 0.2f;
-            handTransform.localPosition = Vector3.Lerp(startPosLeftHand, endPosLeftHand, normalizedDelta);
+            handTransform.localPosition = Vector3.Lerp(startPosHand, endPosLeftHand, normalizedDelta);
             yield return null;
         }
 
         yield return new WaitForSeconds(punchArmExtendedTime);
 
         sCollider.enabled = false;
-        Vector3 returnPosLeftHand = new Vector3(-0.7f, -1.54f, 0.13f);
+        Vector3 returnPosHand = returnPos;
         currentTime = 0.0f;
         while (currentTime < 0.35f)
         {
             currentTime += Time.deltaTime;
             normalizedDelta = currentTime / 0.35f;
-            handTransform.localPosition = Vector3.Lerp(endPosLeftHand, returnPosLeftHand, normalizedDelta);
+            handTransform.localPosition = Vector3.Lerp(endPosLeftHand, returnPosHand, normalizedDelta);
             yield return null;
         }
         yield return new WaitForSeconds(0.01f);
